@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package grpcapi;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "./;grpcapi";
+
+service ServiceMessages {
+    rpc RequestNewToken(TokenRequest) returns (TokenResponse) {}
+    rpc GetMyRooms(MyRoomsRequest) returns (MyRoomsResponse) {}
+    rpc SendFastMessage(FastMessageRequest) returns (FastMessageResponse) {}
+    rpc SendMessageInRoom(SendMessageInRoomRequest) returns (SendMessageInRoomResponse) {}
+    rpc SendMessageByRefID(SendMessageByRefIDRequest) returns (SendMessageByRefIDResponse) {}
+    rpc GetMessagesInRoom(MessagesRequest) returns (MessagesResponse) {}
+    rpc GetUserInfo(UserRequest) returns (User) {}
+    rpc GetPrivateRoomWithoutCreate(GetPrivateRoomWithoutCreateRequest) returns (MyRoom) {}
+    rpc SetZeroUnreadCount(SetZeroUnreadCountRequest) returns (SetZeroUnreadCountResponse) {}
+}
+
+message TokenRequest{
+    int64 refid = 1;  
+}
+
+message TokenResponse{
+    int64   refid     = 1;  
+    string  token     = 2; 
+    string  centrifugoURL = 3; 
+}
+
+message MyRoomsRequest{
+    int64 refid = 1;
+    int64 page = 2;
+    int64 size = 3;
+}
+
+message MyRoomsResponse{
+    repeated MyRoom rooms = 1;
+    int64 UnreadMessagesCount = 2;
+}
+
+message MyRoom{
+    string RoomID = 1;    
+    string Type = 2;    
+    string Name = 3;    
+    google.protobuf.Timestamp LastMessage = 4;    
+    string LogoUrl = 5;    
+    int32 NotReadCount = 6;    
+    int64 CompanionRefID = 7;  
+    int64 CompanionOwnerRefID = 8; 
+    MyRoomLastMessage MyRoomLastMessage = 9;    
+}
+
+message MyRoomLastMessage{
+    string  ID      = 1;    
+    int64   RefID   = 2;    
+    string  Type    = 3;    
+    string  Body    = 4;    
+}
+
+message FastMessageRequest{
+    int64   RefIDFrom       = 1;    
+    int64   RefIDTo         = 2;    
+    // string  MessageType     = 3;    
+    string  MessageBody     = 4;    
+}
+
+message FastMessageResponse{
+    string ID = 1;  
+    string RoomID = 2; 
+}
+
+message SendMessageInRoomRequest{
+    int64   RefIDFrom       = 1;    
+    string  RoomID          = 2;    
+    string  MessageType     = 3;    
+    string  MessageBody     = 4;    
+    google.protobuf.Struct Addition = 5; 
+}
+
+message SendMessageInRoomResponse{
+    string ID = 1; 
+}
+
+message SendMessageByRefIDRequest {
+    int64   RefIDFrom       = 1;    
+    int64   RefIDTo         = 2;    
+    string  MessageType     = 3;    
+    string  MessageBody     = 4;    
+    google.protobuf.Struct Addition = 5; 
+}
+
+message SendMessageByRefIDResponse {
+    string ID       = 1; 
+    string RoomID   = 2; 
+}
+
+message MessagesRequest{
+    string  RoomID  = 1;  
+    int64   RefID   = 2; 
+    int32   count   = 3; 
+    string  LastMsgID = 4; 
+}
+
+message MessagesResponse{
+    repeated Message messages = 1;
+    int32 CompanionUreadCount = 2; 
+}
+
+message Message{
+    string  ID = 1;       
+    string  RoomID = 2;   
+    int64   RefID = 3;    
+    google.protobuf.Timestamp   Sended = 4;    
+    string  MessageType = 5;    
+    string  Body = 6;           
+    google.protobuf.Struct Addition = 7; 
+}
+
+message UserRequest{
+    int64 RefID = 1;        
+}
+
+message User{
+    int64   RefID       = 1;    
+    string  Name        = 2;    
+    string  LogoUrl     = 3;    
+    google.protobuf.Timestamp   CachedTime  = 4;    
+    int64   OwnerRefID  = 5; 
+}
+
+message GetPrivateRoomWithoutCreateRequest{
+    int64   RefID   = 1; 
+    int64   RefID2  = 2; 
+}
+
+message SetZeroUnreadCountRequest {
+    string RoomID = 1;    
+    int64   RefID = 2;    
+}
+
+message SetZeroUnreadCountResponse {
+
+}

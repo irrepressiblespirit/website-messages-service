@@ -1,0 +1,16 @@
+prefix: /website-messages-service
+token: develop
+centrifugo:
+  secret: your-secret
+  apikey: your-apikey
+  apiurl: "http://127.0.0.1:8000"
+  grpc: "127.0.0.1:10000"
+mongo: "mongodb://127.0.0.1:27117"
+externaluser: "https://randomuser.me/api/"
+gin:
+  mode: debug
+resttimeout: 500ms
+ws: 
+  - "wss://ws1.test.ua/connection/websocket"
+  - "wss://ws2.test.ua/connection/websocket"
+  - "wss://ws3.test.ua/connection/websocket"
